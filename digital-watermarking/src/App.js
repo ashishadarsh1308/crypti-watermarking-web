@@ -20,6 +20,17 @@ const ProtectedRoute = ({ children }) => {
   return children; // Render the protected component
 };
 
+const PublicRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated'); // Retrieve authentication state
+
+  if (isAuthenticated) {
+    // Redirect to home if already authenticated
+    return <Navigate to="/home" />;
+  }
+
+  return children; // Render the public component
+};
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -42,7 +53,13 @@ function App() {
     <Router>
       <Routes>
         {/* Public Route */}
-        <Route path="/" element={<Login />} />
+        <Route path="/"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
 
         {/* Protected Routes */}
         <Route
